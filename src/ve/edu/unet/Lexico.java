@@ -5,7 +5,6 @@
 package ve.edu.unet;
 
 import java_cup.runtime.*;
-
 import java.io.Reader;
 //import otros.*;
 
@@ -67,13 +66,15 @@ class Lexico implements java_cup.runtime.Scanner {
   private static final int [] ZZ_CMAP_BLOCKS = zzUnpackcmap_blocks();
 
   private static final String ZZ_CMAP_BLOCKS_PACKED_0 =
-    "\11\0\1\1\1\2\2\3\1\4\22\0\1\1\7\0"+
-    "\1\5\1\6\1\7\1\10\1\0\1\11\1\0\1\12"+
-    "\12\13\1\14\1\15\1\16\1\17\3\0\32\20\6\0"+
-    "\1\21\2\20\1\22\1\23\1\24\1\20\1\25\1\26"+
-    "\2\20\1\27\1\20\1\30\1\20\1\31\1\20\1\32"+
-    "\1\33\1\34\1\35\1\20\1\36\3\20\1\37\1\0"+
-    "\1\40\7\0\1\3\u01a2\0\2\3\326\0\u0100\3";
+    "\11\0\1\1\1\2\2\3\1\4\22\0\1\1\11\0"+
+    "\1\5\1\6\1\0\1\7\1\0\1\10\12\11\1\12"+
+    "\1\0\1\13\1\14\1\15\2\0\1\16\2\17\1\20"+
+    "\11\17\1\21\1\22\2\17\1\23\1\17\1\24\6\17"+
+    "\1\25\1\0\1\26\3\0\1\27\1\30\1\31\1\32"+
+    "\1\33\1\34\1\17\1\35\1\36\2\17\1\37\1\40"+
+    "\1\41\1\42\1\43\1\17\1\44\1\45\1\46\1\47"+
+    "\1\50\1\51\3\17\1\52\1\0\1\53\7\0\1\3"+
+    "\u01a2\0\2\3\326\0\u0100\3";
 
   private static int [] zzUnpackcmap_blocks() {
     int [] result = new int[1024];
@@ -101,13 +102,15 @@ class Lexico implements java_cup.runtime.Scanner {
 
   private static final String ZZ_ACTION_PACKED_0 =
     "\1\0\1\1\1\2\1\3\1\0\1\4\1\5\1\6"+
-    "\1\7\1\10\1\11\1\12\1\1\1\13\1\14\1\15"+
-    "\7\16\1\1\1\3\1\17\2\16\1\20\4\16\1\0"+
-    "\1\16\1\21\5\16\1\22\1\23\1\24\1\16\1\25"+
-    "\3\16\1\26\1\27\1\30";
+    "\1\7\1\10\1\1\1\11\1\12\1\13\4\14\1\15"+
+    "\1\16\12\14\1\1\1\3\1\17\1\20\1\21\1\22"+
+    "\2\14\1\23\4\14\1\24\6\14\1\0\1\25\1\26"+
+    "\1\27\2\14\1\30\1\31\1\32\7\14\1\33\1\34"+
+    "\1\14\1\35\5\14\1\36\1\14\1\37\1\14\1\40"+
+    "\1\41\1\42";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[52];
+    int [] result = new int[82];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -132,16 +135,20 @@ class Lexico implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\41\0\102\0\143\0\204\0\41\0\41\0\41"+
-    "\0\41\0\41\0\41\0\245\0\306\0\41\0\41\0\41"+
-    "\0\347\0\u0108\0\u0129\0\u014a\0\u016b\0\u018c\0\u01ad\0\u01ce"+
-    "\0\41\0\41\0\u01ef\0\u0210\0\347\0\u0231\0\u0252\0\u0273"+
-    "\0\u0294\0\u02b5\0\u02d6\0\347\0\u02f7\0\u0318\0\u0339\0\u035a"+
-    "\0\u037b\0\41\0\347\0\347\0\u039c\0\347\0\u03bd\0\u03de"+
-    "\0\u03ff\0\347\0\347\0\347";
+    "\0\0\0\54\0\130\0\204\0\260\0\54\0\54\0\54"+
+    "\0\54\0\334\0\u0108\0\u0134\0\54\0\u0160\0\u018c\0\u01b8"+
+    "\0\u01e4\0\u0210\0\54\0\54\0\u023c\0\u0268\0\u0294\0\u02c0"+
+    "\0\u02ec\0\u0318\0\u0344\0\u0370\0\u039c\0\u03c8\0\u03f4\0\54"+
+    "\0\54\0\54\0\54\0\54\0\u0420\0\u044c\0\u01b8\0\u0478"+
+    "\0\u04a4\0\u04d0\0\u04fc\0\u01b8\0\u0528\0\u0554\0\u0580\0\u05ac"+
+    "\0\u05d8\0\u0604\0\u03f4\0\54\0\u01b8\0\u01b8\0\u0630\0\u065c"+
+    "\0\u01b8\0\u01b8\0\u01b8\0\u0688\0\u06b4\0\u06e0\0\u070c\0\u0738"+
+    "\0\u0764\0\u0790\0\u01b8\0\u01b8\0\u07bc\0\u01b8\0\u07e8\0\u0814"+
+    "\0\u0840\0\u086c\0\u0898\0\u01b8\0\u08c4\0\u01b8\0\u08f0\0\u01b8"+
+    "\0\u01b8\0\u01b8";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[52];
+    int [] result = new int[82];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -165,26 +172,58 @@ class Lexico implements java_cup.runtime.Scanner {
 
   private static final String ZZ_TRANS_PACKED_0 =
     "\1\2\1\3\1\4\1\0\1\5\1\6\1\7\1\10"+
-    "\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20"+
-    "\3\21\1\22\2\21\1\23\3\21\1\24\1\21\1\25"+
-    "\1\26\1\27\1\30\1\2\42\0\1\3\43\0\1\31"+
-    "\36\0\1\31\51\0\1\14\44\0\1\32\41\0\17\21"+
-    "\22\0\7\21\1\33\1\34\6\21\22\0\4\21\1\35"+
-    "\12\21\22\0\3\21\1\36\13\21\22\0\5\21\1\37"+
-    "\11\21\22\0\10\21\1\40\6\21\22\0\12\21\1\41"+
-    "\4\21\2\0\40\42\21\0\13\21\1\43\3\21\22\0"+
-    "\2\21\1\44\14\21\22\0\1\21\1\45\7\21\1\46"+
-    "\5\21\22\0\3\21\1\47\13\21\22\0\14\21\1\50"+
-    "\2\21\22\0\6\21\1\51\10\21\2\0\40\42\1\52"+
-    "\20\0\3\21\1\53\13\21\22\0\2\21\1\54\14\21"+
-    "\22\0\3\21\1\55\13\21\22\0\10\21\1\56\6\21"+
-    "\22\0\6\21\1\57\10\21\22\0\14\21\1\60\2\21"+
-    "\22\0\1\21\1\61\15\21\22\0\7\21\1\62\7\21"+
-    "\22\0\3\21\1\63\13\21\22\0\14\21\1\64\2\21"+
-    "\2\0";
+    "\1\11\1\12\1\13\1\14\1\15\1\16\1\17\2\20"+
+    "\1\21\1\22\2\20\1\23\1\24\1\20\1\25\2\20"+
+    "\1\26\1\27\1\20\1\30\1\20\1\31\3\20\1\32"+
+    "\1\20\1\33\1\34\1\35\1\36\1\37\1\2\55\0"+
+    "\1\3\56\0\1\40\51\0\1\40\62\0\1\12\56\0"+
+    "\1\41\53\0\1\42\1\43\52\0\1\44\50\0\1\20"+
+    "\4\0\3\20\1\45\3\20\2\0\23\20\13\0\1\20"+
+    "\4\0\7\20\2\0\23\20\13\0\1\20\4\0\4\20"+
+    "\1\46\2\20\2\0\23\20\13\0\1\20\4\0\5\20"+
+    "\1\47\1\20\2\0\23\20\13\0\1\20\4\0\7\20"+
+    "\2\0\13\20\1\50\7\20\13\0\1\20\4\0\7\20"+
+    "\2\0\10\20\1\51\1\20\1\52\10\20\13\0\1\20"+
+    "\4\0\7\20\2\0\13\20\1\53\7\20\13\0\1\20"+
+    "\4\0\7\20\2\0\5\20\1\54\15\20\13\0\1\20"+
+    "\4\0\7\20\2\0\13\20\1\55\7\20\13\0\1\20"+
+    "\4\0\7\20\2\0\4\20\1\56\16\20\13\0\1\20"+
+    "\4\0\7\20\2\0\6\20\1\57\14\20\13\0\1\20"+
+    "\4\0\7\20\2\0\12\20\1\60\10\20\13\0\1\20"+
+    "\4\0\7\20\2\0\4\20\1\61\16\20\13\0\1\20"+
+    "\4\0\7\20\2\0\15\20\1\62\5\20\2\0\53\63"+
+    "\1\64\11\0\1\20\4\0\2\20\1\65\4\20\2\0"+
+    "\23\20\13\0\1\20\4\0\6\20\1\66\2\0\23\20"+
+    "\13\0\1\20\4\0\7\20\2\0\13\20\1\67\7\20"+
+    "\13\0\1\20\4\0\7\20\2\0\16\20\1\70\4\20"+
+    "\13\0\1\20\4\0\7\20\2\0\3\20\1\71\17\20"+
+    "\13\0\1\20\4\0\7\20\2\0\15\20\1\72\5\20"+
+    "\13\0\1\20\4\0\7\20\2\0\3\20\1\73\17\20"+
+    "\13\0\1\20\4\0\7\20\2\0\1\74\13\20\1\75"+
+    "\6\20\13\0\1\20\4\0\7\20\2\0\4\20\1\76"+
+    "\16\20\13\0\1\20\4\0\7\20\2\0\17\20\1\77"+
+    "\3\20\13\0\1\20\4\0\7\20\2\0\2\20\1\100"+
+    "\20\20\13\0\1\20\4\0\7\20\2\0\7\20\1\101"+
+    "\13\20\13\0\1\20\4\0\7\20\2\0\10\20\1\102"+
+    "\12\20\13\0\1\20\4\0\7\20\2\0\4\20\1\103"+
+    "\16\20\13\0\1\20\4\0\7\20\2\0\3\20\1\104"+
+    "\17\20\13\0\1\20\4\0\7\20\2\0\4\20\1\105"+
+    "\16\20\13\0\1\20\4\0\7\20\2\0\12\20\1\106"+
+    "\10\20\13\0\1\20\4\0\7\20\2\0\7\20\1\107"+
+    "\13\20\13\0\1\20\4\0\7\20\2\0\17\20\1\110"+
+    "\3\20\13\0\1\20\4\0\7\20\2\0\17\20\1\111"+
+    "\3\20\13\0\1\20\4\0\7\20\2\0\4\20\1\112"+
+    "\16\20\13\0\1\20\4\0\7\20\2\0\1\113\22\20"+
+    "\13\0\1\20\4\0\7\20\2\0\10\20\1\114\12\20"+
+    "\13\0\1\20\4\0\7\20\2\0\13\20\1\115\7\20"+
+    "\13\0\1\20\4\0\7\20\2\0\4\20\1\116\16\20"+
+    "\13\0\1\20\4\0\7\20\2\0\1\117\22\20\13\0"+
+    "\1\20\4\0\7\20\2\0\17\20\1\120\3\20\13\0"+
+    "\1\20\4\0\7\20\2\0\15\20\1\121\5\20\13\0"+
+    "\1\20\4\0\7\20\2\0\12\20\1\122\10\20\2\0";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[1056];
+    int [] result = new int[2332];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -227,11 +266,11 @@ class Lexico implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\1\11\2\1\1\0\6\11\2\1\3\11\10\1"+
-    "\2\11\7\1\1\0\7\1\1\11\12\1";
+    "\1\0\1\11\2\1\1\0\4\11\3\1\1\11\5\1"+
+    "\2\11\13\1\5\11\16\1\1\0\1\11\36\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[52];
+    int [] result = new int[82];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -319,18 +358,7 @@ class Lexico implements java_cup.runtime.Scanner {
 	private boolean debug;
 
 
-/******************************************************************
-BORRAR SI NO SE NECESITA
-	//TODO: Cambiar la SF por esto o ver que se hace
-	//Crear un nuevo objeto java_cup.runtime.Symbol con información sobre el token actual sin valor
- 	  private Symbol symbol(int type){
-    		return new Symbol(type,yyline,yycolumn);
-	  }
-	//Crear un nuevo objeto java_cup.runtime.Symbol con información sobre el token actual con valor
-	  private Symbol symbol(int type,Object value){
-    		return new Symbol(type,yyline,yycolumn,value);
-	  }
-******************************************************************/
+
 
 
   /**
@@ -743,142 +771,202 @@ BORRAR SI NO SE NECESITA
             { System.err.println("Caracter Ilegal encontrado en analisis lexico: " + yytext() + "\n");
             }
             // fall through
-          case 25: break;
+          case 35: break;
           case 2:
             { /* saltos espacios en blanco*/
             }
             // fall through
-          case 26: break;
+          case 36: break;
           case 3:
             { lineanum++;
             }
             // fall through
-          case 27: break;
+          case 37: break;
           case 4:
-            { if(debug) System.out.println("token LPAREN");
-			return sf.newSymbol("LPAREN",sym.LPAREN);
-            }
-            // fall through
-          case 28: break;
-          case 5:
-            { if(debug) System.out.println("token RPAREN");
-			return sf.newSymbol("RPAREN",sym.RPAREN);
-            }
-            // fall through
-          case 29: break;
-          case 6:
             { if(debug) System.out.println("token TIMES");
 			return sf.newSymbol("TIMES",sym.TIMES);
             }
             // fall through
-          case 30: break;
-          case 7:
+          case 38: break;
+          case 5:
             { if(debug) System.out.println("token PLUS");
 			return sf.newSymbol("PLUS",sym.PLUS);
             }
             // fall through
-          case 31: break;
-          case 8:
+          case 39: break;
+          case 6:
             { if(debug) System.out.println("token MINUS");
 			return sf.newSymbol("MINUS",sym.MINUS);
             }
             // fall through
-          case 32: break;
-          case 9:
+          case 40: break;
+          case 7:
             { if(debug) System.out.println("token OVER");
 			return sf.newSymbol("OVER",sym.OVER);
             }
             // fall through
-          case 33: break;
-          case 10:
+          case 41: break;
+          case 8:
             { if(debug) System.out.println("token NUM");
 			return sf.newSymbol("NUM",sym.NUM,new String(yytext()));
             }
             // fall through
-          case 34: break;
-          case 11:
-            { if(debug) System.out.println("token SEMI");
-			return sf.newSymbol("SEMI",sym.SEMI);
-            }
-            // fall through
-          case 35: break;
-          case 12:
+          case 42: break;
+          case 9:
             { if(debug) System.out.println("token LT");
 			return sf.newSymbol("LT",sym.LT);
             }
             // fall through
-          case 36: break;
-          case 13:
+          case 43: break;
+          case 10:
             { if(debug) System.out.println("token EQ");
 			return sf.newSymbol("EQ",sym.EQ);
             }
             // fall through
-          case 37: break;
-          case 14:
+          case 44: break;
+          case 11:
+            { if(debug) System.out.println("token GT");
+            return sf.newSymbol("GT", sym.GT);
+            }
+            // fall through
+          case 45: break;
+          case 12:
             { if(debug) System.out.println("token ID");
 				return sf.newSymbol("ID",sym.ID,new String(yytext()));
             }
             // fall through
-          case 38: break;
+          case 46: break;
+          case 13:
+            { if(debug) System.out.println("token LBRACKET");
+            return sf.newSymbol("LBRACKET", sym.LBRACKET);
+            }
+            // fall through
+          case 47: break;
+          case 14:
+            { if(debug) System.out.println("token RBRACKET");
+            return sf.newSymbol("RBRACKET", sym.RBRACKET);
+            }
+            // fall through
+          case 48: break;
           case 15:
             { if(debug) System.out.println("token ASSIGN");
 			return sf.newSymbol("ASSIGN",sym.ASSIGN);
             }
             // fall through
-          case 39: break;
+          case 49: break;
           case 16:
+            { if(debug) System.out.println("token LE");
+			return sf.newSymbol("LE",sym.LE);
+            }
+            // fall through
+          case 50: break;
+          case 17:
+            { if(debug) System.out.println("token NE");
+            return sf.newSymbol("NE", sym.NE);
+            }
+            // fall through
+          case 51: break;
+          case 18:
+            { if(debug) System.out.println("token GE");
+            return sf.newSymbol("GE", sym.GE);
+            }
+            // fall through
+          case 52: break;
+          case 19:
+            { if(debug) System.out.println("token OR");
+            return sf.newSymbol("OR", sym.OR);
+            }
+            // fall through
+          case 53: break;
+          case 20:
             { if(debug) System.out.println("token IF");
 			return sf.newSymbol("IF",sym.IF);
             }
             // fall through
-          case 40: break;
-          case 17:
+          case 54: break;
+          case 21:
+            { /* salto comentarios */ if(debug) System.out.println("token COMENTARIO");
+            }
+            // fall through
+          case 55: break;
+          case 22:
+            { if(debug) System.out.println("token AND");
+            return sf.newSymbol("AND", sym.AND);
+            }
+            // fall through
+          case 56: break;
+          case 23:
+            { if(debug) System.out.println("token NOT");
+            return sf.newSymbol("NOT", sym.NOT);
+            }
+            // fall through
+          case 57: break;
+          case 24:
             { if(debug) System.out.println("token END");
 			return sf.newSymbol("END",sym.END);
             }
             // fall through
-          case 41: break;
-          case 18:
-            { /* salto comentarios */ if(debug) System.out.println("token COMENTARIO");
+          case 58: break;
+          case 25:
+            { if(debug) System.out.println("token FOR");
+            return sf.newSymbol("FOR",sym.FOR);
             }
             // fall through
-          case 42: break;
-          case 19:
+          case 59: break;
+          case 26:
+            { if(debug) System.out.println("token MOD");
+			return sf.newSymbol("MOD",sym.MOD);
+            }
+            // fall through
+          case 60: break;
+          case 27:
             { if(debug) System.out.println("token ELSE");
 			return sf.newSymbol("ELSE",sym.ELSE);
             }
             // fall through
-          case 43: break;
-          case 20:
+          case 61: break;
+          case 28:
             { if(debug) System.out.println("token READ");
 			return sf.newSymbol("READ",sym.READ);
             }
             // fall through
-          case 44: break;
-          case 21:
+          case 62: break;
+          case 29:
             { if(debug) System.out.println("token THEN");
 			return sf.newSymbol("THEN",sym.THEN);
             }
             // fall through
-          case 45: break;
-          case 22:
+          case 63: break;
+          case 30:
             { if(debug) System.out.println("token UNTIL");
 			return sf.newSymbol("UNTIL",sym.UNTIL);
             }
             // fall through
-          case 46: break;
-          case 23:
+          case 64: break;
+          case 31:
             { if(debug) System.out.println("token WRITE");
 			return sf.newSymbol("WRITE",sym.WRITE);
             }
             // fall through
-          case 47: break;
-          case 24:
+          case 65: break;
+          case 32:
             { if(debug) System.out.println("token REPEAT");
 			return sf.newSymbol("REPEAT",sym.REPEAT);
             }
             // fall through
-          case 48: break;
+          case 66: break;
+          case 33:
+            { if(debug) System.out.println("token VECTOR");
+            return sf.newSymbol("VECTOR",sym.VECTOR);
+            }
+            // fall through
+          case 67: break;
+          case 34:
+            { if(debug) System.out.println("token BOOLEAN");
+            return sf.newSymbol("BOOLEAN",sym.FOR);
+            }
+            // fall through
+          case 68: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

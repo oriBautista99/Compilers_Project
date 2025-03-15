@@ -23,19 +23,10 @@ import java.io.Reader;
 	private boolean debug;
 
 
-/******************************************************************
-BORRAR SI NO SE NECESITA
-	//TODO: Cambiar la SF por esto o ver que se hace
-	//Crear un nuevo objeto java_cup.runtime.Symbol con información sobre el token actual sin valor
- 	  private Symbol symbol(int type){
-    		return new Symbol(type,yyline,yycolumn);
-	  }
-	//Crear un nuevo objeto java_cup.runtime.Symbol con información sobre el token actual con valor
-	  private Symbol symbol(int type,Object value){
-    		return new Symbol(type,yyline,yycolumn,value);
-	  }
-******************************************************************/
+
 %}
+
+/*REVISAR PARA QUE SIRVE*/
 %eofval{
     return sf.newSymbol("EOF",sym.EOF);
 %eofval}
@@ -44,15 +35,17 @@ BORRAR SI NO SE NECESITA
 %line
 %column
 
-
-
+/* Expresiones regulares */
 digito		= [0-9]
 numero		= {digito}+
 letra			= [a-zA-Z]
-identificador	= {letra}+
+identificador	= {letra} ({letra} | {digito})*
 nuevalinea		= \n | \n\r | \r\n
 espacio		= [ \t]+
 %%
+
+/* Palabras Claves */
+
 "if"            {	if(debug) System.out.println("token IF");
 			return sf.newSymbol("IF",sym.IF);
 			}
@@ -71,21 +64,22 @@ espacio		= [ \t]+
 "until"         {	if(debug) System.out.println("token UNTIL");
 			return sf.newSymbol("UNTIL",sym.UNTIL);
 			}
-"read"          {	if(debug) System.out.println("token READ");
-			return sf.newSymbol("READ",sym.READ);
-			}
-"write"         {	if(debug) System.out.println("token WRITE");
-			return sf.newSymbol("WRITE",sym.WRITE);
-			}
+"for"           {  if(debug) System.out.println("token FOR");
+            return sf.newSymbol("FOR",sym.FOR);
+            }
+"boolean"           {  if(debug) System.out.println("token BOOLEAN");
+            return sf.newSymbol("BOOLEAN",sym.FOR);
+            }
+"vector"           {  if(debug) System.out.println("token VECTOR");
+            return sf.newSymbol("VECTOR",sym.VECTOR);
+            }
+
+/*  Lista de Operadores  */
+/* Asignacion */
 ":="            {	if(debug) System.out.println("token ASSIGN");
 			return sf.newSymbol("ASSIGN",sym.ASSIGN);
 			}
-"="             {	if(debug) System.out.println("token EQ");
-			return sf.newSymbol("EQ",sym.EQ);
-			}
-"<"             {	if(debug) System.out.println("token LT");
-			return sf.newSymbol("LT",sym.LT);
-			}
+/* Matematicos */
 "+"             {	if(debug) System.out.println("token PLUS");
 			return sf.newSymbol("PLUS",sym.PLUS);
 			}
@@ -98,22 +92,69 @@ espacio		= [ \t]+
 "/"             {	if(debug) System.out.println("token OVER");
 			return sf.newSymbol("OVER",sym.OVER);
 			}
-"("             {	if(debug) System.out.println("token LPAREN");
-			return sf.newSymbol("LPAREN",sym.LPAREN);
+"mod"             {	if(debug) System.out.println("token MOD");
+			return sf.newSymbol("MOD",sym.MOD);
 			}
-")"             {	if(debug) System.out.println("token RPAREN");
-			return sf.newSymbol("RPAREN",sym.RPAREN);
+/* Relaciones */
+"="             {	if(debug) System.out.println("token EQ");
+			return sf.newSymbol("EQ",sym.EQ);
 			}
-";"             {	if(debug) System.out.println("token SEMI");
-			return sf.newSymbol("SEMI",sym.SEMI);
+"<"             {	if(debug) System.out.println("token LT");
+			return sf.newSymbol("LT",sym.LT);
 			}
+"<="             {	if(debug) System.out.println("token LE");
+			return sf.newSymbol("LE",sym.LE);
+			}
+">"             { if(debug) System.out.println("token GT");
+            return sf.newSymbol("GT", sym.GT);
+            }
+">="             { if(debug) System.out.println("token GE");
+            return sf.newSymbol("GE", sym.GE);
+            }
+"<>"             { if(debug) System.out.println("token NE");
+            return sf.newSymbol("NE", sym.NE);
+            }
+/* Logicos */
+"AND"             { if(debug) System.out.println("token AND");
+            return sf.newSymbol("AND", sym.AND);
+            }
+"OR"             { if(debug) System.out.println("token OR");
+            return sf.newSymbol("OR", sym.OR);
+            }
+"NOT"             { if(debug) System.out.println("token NOT");
+            return sf.newSymbol("NOT", sym.NOT);
+            }
+/* Vector */
+"["             { if(debug) System.out.println("token LBRACKET");
+            return sf.newSymbol("LBRACKET", sym.LBRACKET);
+            }
+"]"             { if(debug) System.out.println("token RBRACKET");
+            return sf.newSymbol("RBRACKET", sym.RBRACKET);
+            }
+
+/* Comentarios */
+"{" [^}]* "}"  { /* salto comentarios */ if(debug) System.out.println("token COMENTARIO"); }
+
+/* Extras */
+"read"          {	if(debug) System.out.println("token READ");
+			return sf.newSymbol("READ",sym.READ);
+			}
+"write"         {	if(debug) System.out.println("token WRITE");
+			return sf.newSymbol("WRITE",sym.WRITE);
+			}
+
+/* numero e Identificador */
 {numero}        {	if(debug) System.out.println("token NUM");
 			return sf.newSymbol("NUM",sym.NUM,new String(yytext()));
 			}
 {identificador}	{	if(debug) System.out.println("token ID");
 				return sf.newSymbol("ID",sym.ID,new String(yytext()));
 			}
-{nuevalinea}       {lineanum++;}
+/* Espacios */
 {espacio}    { /* saltos espacios en blanco*/}
-"{"[^}]+"}"  { /* salto comentarios */ if(debug) System.out.println("token COMENTARIO"); }
+
+/* Manejo de Errores*/
 .               {System.err.println("Caracter Ilegal encontrado en analisis lexico: " + yytext() + "\n");}
+
+/* Extra */
+{nuevalinea}       {lineanum++;}
