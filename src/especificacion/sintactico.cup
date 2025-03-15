@@ -48,24 +48,51 @@ action code {:
 :}
 
 /* Simbolos Terminales */
-
+/* Palabras claves */
 terminal IF;
 terminal THEN;
 terminal ELSE;
 terminal END;
 terminal REPEAT;
 terminal UNTIL;
+terminal FOR;
+terminal BOOLEAN;
+terminal VECTOR;
 terminal READ;
 terminal WRITE;
-terminal String ID;
-terminal String NUM;
+
+/* Asignacion */
 terminal ASSIGN;
-terminal EQ;
-terminal LT;
+
+/* Matematicos */
 terminal PLUS;
 terminal MINUS;
 terminal TIMES;
 terminal OVER;
+terminal MOD;
+
+/* Relaciones */
+terminal EQ;
+terminal LT;
+terminal LE;
+terminal GT;
+terminal GE;
+terminal NE;
+
+/*Logicos*/
+terminal AND;
+terminal OR;
+terminal NOT;
+
+/* Vector */
+terminal LBRACKET;
+terminal RBRACKET;
+
+/* Numero - Identificador */
+terminal String ID;
+terminal String NUM;
+
+/* Extras */
 terminal LPAREN;
 terminal RPAREN;
 terminal SEMI;
