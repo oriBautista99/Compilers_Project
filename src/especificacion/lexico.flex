@@ -142,7 +142,15 @@ espacio		= [ \t]+
 "write"         {	if(debug) System.out.println("token WRITE");
 			return sf.newSymbol("WRITE",sym.WRITE);
 			}
-
+"("             {	if(debug) System.out.println("token LPAREN");
+			return sf.newSymbol("LPAREN",sym.LPAREN);
+			}
+")"             {	if(debug) System.out.println("token RPAREN");
+			return sf.newSymbol("RPAREN",sym.RPAREN);
+			}
+";"             {	if(debug) System.out.println("token SEMI");
+			return sf.newSymbol("SEMI",sym.SEMI);
+}
 /* numero e Identificador */
 {numero}        {	if(debug) System.out.println("token NUM");
 			return sf.newSymbol("NUM",sym.NUM,new String(yytext()));
