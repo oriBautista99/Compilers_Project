@@ -266,26 +266,26 @@ SymbolFactory es una nueva caracteristica que ha sido a�adida a las version 11
 , esto debido a que dicha clase no provee mucha informaci�n de contexto que podria ser util para el analisis semantico o ayudar en la construccion del AST
 Mas informacion en: http//4thmouse.com/index.php/2007/02/15/using-custom-symbols-in-cup/
 ***********/
-	public static void main(String args[]) throws Exception {
-		SymbolFactory sf = new DefaultSymbolFactory();
-		parser parser_obj;
-		if (args.length==0) 
-			parser_obj=new parser(new Lexico(new InputStreamReader(System.in),sf),sf);
-		else
-			parser_obj=new parser(new Lexico(new InputStreamReader(new java.io.FileInputStream(args[0])),sf),sf);
-
-		parser_obj.parse();
-		NodoBase root=parser_obj.action_obj.getASTroot();
-		System.out.println();
-		System.out.println("IMPRESION DEL AST GENERADO");
-		System.out.println();
-        Util.imprimirAST(root);
-		TablaSimbolos ts = new TablaSimbolos();
-		ts.cargarTabla(root);
-		ts.ImprimirClaves();
-		Generador.setTablaSimbolos(ts);
-		Generador.generarCodigoObjeto(root);
-	}
+//	public static void main(String args[]) throws Exception {
+//		SymbolFactory sf = new DefaultSymbolFactory();
+//		parser parser_obj;
+//		if (args.length==0)
+//			parser_obj=new parser(new Lexico(new InputStreamReader(System.in),sf),sf);
+//		else
+//			parser_obj=new parser(new Lexico(new InputStreamReader(new java.io.FileInputStream(args[0])),sf),sf);
+//
+//		parser_obj.parse();
+//		NodoBase root=parser_obj.action_obj.getASTroot();
+//		System.out.println();
+//		System.out.println("IMPRESION DEL AST GENERADO");
+//		System.out.println();
+//        Util.imprimirAST(root);
+//		TablaSimbolos ts = new TablaSimbolos();
+//		ts.cargarTabla(root);
+//		ts.ImprimirClaves();
+//		Generador.setTablaSimbolos(ts);
+//		Generador.generarCodigoObjeto(root);
+//	}
 
 
 
