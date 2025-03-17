@@ -1,5 +1,17 @@
 package ve.edu.unet.nodosAST;
 
 public enum tipoOp {
-	menor,igual,mas,menos,por,entre
+	menor,
+	mayor,
+	igual,
+	menorIgual,
+	mayorIgual,
+	diferente,
+	mas,
+	menos,
+	por,
+	entre,
+	and,
+	or,
+	not
 }
