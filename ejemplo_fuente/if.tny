@@ -1,0 +1,5 @@
+if 0 < x then
+  write 100
+else
+  write 200
+end

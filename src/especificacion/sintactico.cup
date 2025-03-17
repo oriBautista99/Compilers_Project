@@ -279,7 +279,7 @@ exp         ::= simple_exp:exI LT simple_exp:exD	{:
         :}
         | simple_exp:exI NOT simple_exp:exD	{:
             if(debug) System.out.println("\t regla 10i");
-            RESULT = new NodoOperacionUnitaria(exI,tipoOp.not,exD);
+            RESULT = new NodoOperacion(exI,tipoOp.not,exD);
         :}
 		| simple_exp:ex	{: if(debug) System.out.println("\t regla 10c");
             RESULT = ex;
