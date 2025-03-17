@@ -830,7 +830,7 @@ class CUP$parser$actions {
 		NodoBase exD = (NodoBase)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
             if(debug) System.out.println("\t regla 10i");
-            RESULT = new NodoOperacionUnitaria(exI,tipoOp.not,exD);
+            RESULT = new NodoOperacion(exI,tipoOp.not,exD);
         
               CUP$parser$result = parser.getSymbolFactory().newSymbol("exp",9, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
