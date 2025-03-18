@@ -13,5 +13,6 @@ public enum tipoOp {
 	entre,
 	and,
 	or,
-	not
+	not,
+	mod
 }
