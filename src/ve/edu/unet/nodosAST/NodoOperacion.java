@@ -20,6 +20,12 @@ public class NodoOperacion extends NodoBase {
 		this.operacion = tipoOperacion;
 	}
 
+	public NodoOperacion(NodoBase opDerecho, tipoOp tipoOperacion) {
+		super();
+		this.opDerecho = opDerecho;
+		this.operacion = tipoOperacion;
+	}
+
 	public NodoBase getOpIzquierdo() {
 		return opIzquierdo;
 	}

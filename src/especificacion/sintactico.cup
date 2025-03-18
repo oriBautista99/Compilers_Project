@@ -277,9 +277,9 @@ exp         ::= simple_exp:exI LT simple_exp:exD	{:
             if(debug) System.out.println("\t regla 10h");
             RESULT = new NodoOperacion(exI,tipoOp.or,exD);
         :}
-        | simple_exp:exI NOT simple_exp:exD	{:
+        | NOT simple_exp:exD	{:
             if(debug) System.out.println("\t regla 10i");
-            RESULT = new NodoOperacion(exI,tipoOp.not,exD);
+            RESULT = new NodoOperacion(exD,tipoOp.not);
         :}
 		| simple_exp:ex	{: if(debug) System.out.println("\t regla 10c");
             RESULT = ex;
@@ -310,8 +310,12 @@ term        ::= term:exI TIMES factor:exD	{:
 		    if(debug) System.out.println("\t regla 11b");
             RESULT = new NodoOperacion(exI,tipoOp.entre,exD);
 		:}
-		| factor:ex	{:
+		| term:exI MOD factor:exD {:
 		    if(debug) System.out.println("\t regla 11c");
+		    RESULT = new NodoOperacion(exI,tipoOp.mod,exD);
+		:}
+		| factor:ex	{:
+		    if(debug) System.out.println("\t regla 11d");
             RESULT=ex;
         :}
 		;

@@ -1,5 +1,6 @@
 package ve.edu.unet;
 
+import com.sun.org.apache.xml.internal.utils.NodeVector;
 import ve.edu.unet.nodosAST.*;
 
 public class Generador {
@@ -61,10 +62,14 @@ public class Generador {
 	if(tablaSimbolos!=null){
 		if (nodo instanceof  NodoIf){
 			generarIf(nodo);
+		}else  if (nodo instanceof NodoFor){
+			generarFor(nodo);
 		}else if (nodo instanceof  NodoRepeat){
 			generarRepeat(nodo);
 		}else if (nodo instanceof  NodoAsignacion){
 			generarAsignacion(nodo);
+		}else  if (nodo instanceof NodoAsignacionVector){
+			generarVector(nodo);
 		}else if (nodo instanceof  NodoLeer){
 			generarLeer(nodo);
 		}else if (nodo instanceof  NodoEscribir){
@@ -125,18 +130,76 @@ public class Generador {
 			generar(n.getPrueba());
 			UtGen.emitirRM_Abs("JEQ", UtGen.AC, localidadSaltoInicio, "repeat: jmp hacia el inicio del cuerpo");
 		if(UtGen.debug)	UtGen.emitirComentario("<- repeat");
-	}		
+	}
+
+	private static void generarFor(NodoBase nodo) {
+		NodoFor n = (NodoFor)nodo;
+		int initLoop;
+		int endLoop;
+		int direccionVar;
+		if(UtGen.debug)	UtGen.emitirComentario("-> for");
+			//direccion de variable de control
+			direccionVar = tablaSimbolos.getDireccion(n.getVariable());
+			//genero coodigo para inicializacion y asignarlo
+			generar(n.getInit());
+			UtGen.emitirRM("ST", UtGen.AC, direccionVar, UtGen.GP, "for: asignar valor inicial");
+
+			//etiqueto inicio loop
+			initLoop = UtGen.emitirSalto(0);
+
+			//evaluar condicion: variebal <= final
+			UtGen.emitirRM("LD", UtGen.AC, direccionVar, UtGen.GP, "for: cargar valor de :"+ n.getVariable());
+			// codigo para final
+			generar(n.getEnd());
+			UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC, UtGen.AC1, "For: comparar variable con el limite");
+			//salto condicionaal a salida
+			endLoop = UtGen.emitirSalto(1);
+
+			//genero codigo para el cuerpo del ciclo
+			generar(n.getSent());
+
+			// Incrementar variable control
+			UtGen.emitirRM("LD", UtGen.AC, direccionVar, UtGen.GP, "for: cargar valor de:" + n.getVariable());
+			UtGen.emitirRM("LDA", UtGen.AC, 1, UtGen.AC, "for: incrementar variable de control ");
+			UtGen.emitirRM("ST", UtGen.AC, direccionVar, UtGen.GP, "for: almacenar valor incrementado");
+
+			//saltar al inicio
+			UtGen.emitirRM_Abs("LDA", UtGen.PC, initLoop, "for: Volver al inicio del for");
+			// Poner etiqueta de salida
+			UtGen.cargarRespaldo(endLoop);
+			UtGen.emitirRM_Abs("LDA", UtGen.PC, UtGen.AC, "for: Salir del for");
+			UtGen.restaurarRespaldo();
+
+		if(UtGen.debug)	UtGen.emitirComentario("<- for");
+	}
 	
 	private static void generarAsignacion(NodoBase nodo){
-		NodoAsignacion n = (NodoAsignacion)nodo;
-		int direccion;
-		if(UtGen.debug)	UtGen.emitirComentario("-> asignacion");		
-		/* Genero el codigo para la expresion a la derecha de la asignacion */
-		generar(n.getExpresion());
-		/* Ahora almaceno el valor resultante */
-		direccion = tablaSimbolos.getDireccion(n.getIdentificador());
-		UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "asignacion: almaceno el valor para el id "+n.getIdentificador());
-		if(UtGen.debug)	UtGen.emitirComentario("<- asignacion");
+		if( nodo instanceof  NodoAsignacionVector) {
+			NodoAsignacionVector nodoVec = (NodoAsignacionVector)nodo;
+
+			if(UtGen.debug) UtGen.emitirComentario("-> asignacion vector");
+			// genera codigo para la empresion del indice
+			generar(nodoVec.getIndex());
+			// carga direccion base del vector en AC1
+			UtGen.emitirRM("LD",UtGen.AC1, tablaSimbolos.getDireccion(nodoVec.getIdentificador()), UtGen.GP, "Carga direccion base del vector");
+			// Calcular direccion real del vector
+			UtGen.emitirRO("ADD", UtGen.AC, UtGen.AC1, UtGen.AC, "Calcular direccion real en memoria");
+			//Generar codigo para la expresion a asignar
+			generar(nodoVec.getExpresion());
+			//Guardar el valor en la direccion calculada
+			UtGen.emitirRM("ST", UtGen.AC,0,UtGen.AC, "Guardar valor en vector");
+			if(UtGen.debug) UtGen.emitirComentario("<- asignacion vector");
+		} else {
+			NodoAsignacion n = (NodoAsignacion)nodo;
+			int direccion;
+			if(UtGen.debug)	UtGen.emitirComentario("-> asignacion");
+			/* Genero el codigo para la expresion a la derecha de la asignacion */
+			generar(n.getExpresion());
+			/* Ahora almaceno el valor resultante */
+			direccion = tablaSimbolos.getDireccion(n.getIdentificador());
+			UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "asignacion: almaceno el valor para el id "+n.getIdentificador());
+			if(UtGen.debug)	UtGen.emitirComentario("<- asignacion");
+		}
 	}
 	
 	private static void generarLeer(NodoBase nodo){
@@ -175,6 +238,18 @@ public class Generador {
 		if(UtGen.debug)	UtGen.emitirComentario("-> identificador");
 	}
 
+	private static void generarVector(NodoBase nodo){
+		NodoAsignacionVector n = (NodoAsignacionVector)nodo;
+		// genero codigo de exprecion el indice
+		generar(n.getExpresion());
+		//cargo direccion base del vector
+		UtGen.emitirRM("LD", UtGen.AC1, tablaSimbolos.getDireccion(n.getIdentificador()), UtGen.GP, "Cargo direccion base del vector");
+		//Calculo direccion real
+		UtGen.emitirRO("ADD", UtGen.AC, UtGen.AC1, UtGen.AC, "Calcular direccion real del vector");
+		// Cargar el valor del vector AC
+		UtGen.emitirRM("LD", UtGen.AC, 0, UtGen.AC, "Cargar valor del vector");
+	}
+
 	private static void generarOperacion(NodoBase nodo){
 		NodoOperacion n = (NodoOperacion) nodo;
 		if(UtGen.debug)	UtGen.emitirComentario("-> Operacion: " + n.getOperacion());
@@ -187,28 +262,68 @@ public class Generador {
 		/* Ahora cargo/saco de la pila el valor izquierdo */
 		UtGen.emitirRM("LD", UtGen.AC1, ++desplazamientoTmp, UtGen.MP, "op: pop o cargo de la pila el valor izquierdo en AC1");
 		switch(n.getOperacion()){
-			case	mas:	UtGen.emitirRO("ADD", UtGen.AC, UtGen.AC1, UtGen.AC, "op: +");		
+			case	mas:
+							UtGen.emitirRO("ADD", UtGen.AC, UtGen.AC1, UtGen.AC, "op: +");
 							break;
-			case	menos:	UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: -");
+			case	menos:
+							UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: -");
 							break;
-			case	por:	UtGen.emitirRO("MUL", UtGen.AC, UtGen.AC1, UtGen.AC, "op: *");
+			case	por:
+							UtGen.emitirRO("MUL", UtGen.AC, UtGen.AC1, UtGen.AC, "op: *");
 							break;
-			case	entre:	UtGen.emitirRO("DIV", UtGen.AC, UtGen.AC1, UtGen.AC, "op: /");
-							break;		
-			case	menor:	UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: <");
-							UtGen.emitirRM("JLT", UtGen.AC, 2, UtGen.PC, "voy dos instrucciones mas alla if verdadero (AC<0)");
-							UtGen.emitirRM("LDC", UtGen.AC, 0, UtGen.AC, "caso de falso (AC=0)");
-							UtGen.emitirRM("LDA", UtGen.PC, 1, UtGen.PC, "Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)");
-							UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");
+			case	entre:
+							UtGen.emitirRO("DIV", UtGen.AC, UtGen.AC1, UtGen.AC, "op: /");
 							break;
-			case	igual:	UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: ==");
-							UtGen.emitirRM("JEQ", UtGen.AC, 2, UtGen.PC, "voy dos instrucciones mas alla if verdadero (AC==0)");
-							UtGen.emitirRM("LDC", UtGen.AC, 0, UtGen.AC, "caso de falso (AC=0)");
-							UtGen.emitirRM("LDA", UtGen.PC, 1, UtGen.PC, "Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)");
-							UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");
-							break;	
+			case 	mod:
+							UtGen.emitirRO("DIV", UtGen.AC, UtGen.AC1, UtGen.AC, "A/B");
+							UtGen.emitirRO("MUL", UtGen.AC, UtGen.AC, UtGen.AC1, "(A/B)*B");
+							UtGen.emitirRM("LD", UtGen.AC1, desplazamientoTmp, UtGen.MP, "Recuperar A original");
+							UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "A mod B");
+							break;
+			/* Relacionales */
+			case	menor:
+				UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: <");
+				UtGen.emitirRM("JLT", UtGen.AC, 2, UtGen.PC, "voy dos instrucciones mas alla if verdadero (AC<0)");
+				UtGen.emitirRM("LDC", UtGen.AC, 0, UtGen.AC, "caso de falso (AC=0)");
+				UtGen.emitirRM("LDA", UtGen.PC, 1, UtGen.PC, "Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)");
+				UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");
+				break;
+			case	mayor:
+				UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: >");
+				UtGen.emitirRM("JGT", UtGen.AC, 2, UtGen.PC, "if verdadero (AC>0)");
+				break;
+			case	menorIgual:
+				UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: <=");
+				UtGen.emitirRM("JGT", UtGen.AC, 2, UtGen.PC, "if falso (AC>0)");
+				break;
+			case 	mayorIgual:
+				UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: >=");
+				UtGen.emitirRM("JLT", UtGen.AC, 2, UtGen.PC, "if falso (AC<0)");
+				break;
+			case	igual:
+				UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: ==");
+				UtGen.emitirRM("JEQ", UtGen.AC, 2, UtGen.PC, "voy dos instrucciones mas alla if verdadero (AC==0)");
+				UtGen.emitirRM("LDC", UtGen.AC, 0, UtGen.AC, "caso de falso (AC=0)");
+				UtGen.emitirRM("LDA", UtGen.PC, 1, UtGen.PC, "Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)");
+				UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");
+				break;
+			case  	diferente:
+				UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: <>");
+				UtGen.emitirRM("JNE", UtGen.AC, 2, UtGen.PC, "if verdadero (AC!=0)");
+				break;
+			/* Logicos */
+			case and:
+				UtGen.emitirRO("AND", UtGen.AC, UtGen.AC1, UtGen.AC, "OP: AND");
+				break;
+			case or:
+				UtGen.emitirRO("OR", UtGen.AC, UtGen.AC1, UtGen.AC, "OP: OR");
+				break;
+			case not:
+				UtGen.emitirRM("LDC", UtGen.AC1, 1,0, "OP: cargar 1");
+				UtGen.emitirRO("XOR", UtGen.AC, UtGen.AC, UtGen.AC, "op: NOT");
+				break;
 			default:
-							UtGen.emitirComentario("BUG: tipo de operacion desconocida");
+				UtGen.emitirComentario("BUG: tipo de operacion desconocida");
 		}
 		if(UtGen.debug)	UtGen.emitirComentario("<- Operacion: " + n.getOperacion());
 	}
@@ -216,7 +331,7 @@ public class Generador {
 	//TODO: enviar preludio a archivo de salida, obtener antes su nombre
 	private static void generarPreludioEstandar(){
 		UtGen.emitirComentario("Compilacion TINY para el codigo objeto TM");
-		UtGen.emitirComentario("Archivo: "+ "NOMBRE_ARREGLAR");
+		UtGen.emitirComentario("Archivo: "+ "ProyectoCompiladores_20241");
 		/*Genero inicializaciones del preludio estandar*/
 		/*Todos los registros en tiny comienzan en cero*/
 		UtGen.emitirComentario("Preludio estandar:");
