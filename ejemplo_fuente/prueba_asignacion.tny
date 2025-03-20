@@ -1,0 +1,8 @@
+int i;
+i := 3;
+
+boolean t;
+t := false;
+
+write i;
+write t;
