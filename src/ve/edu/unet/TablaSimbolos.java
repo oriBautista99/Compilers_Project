@@ -24,6 +24,14 @@ public class TablaSimbolos {
 	    	//TODO: Añadir el numero de linea y localidad de memoria correcta
 	    }
 
+		if (raiz instanceof NodoDeclaracion){
+			InsertarSimbolo(((NodoDeclaracion)raiz).getName(),-1);
+		}
+
+			if (raiz instanceof NodoDeclaracionVector){
+				InsertarSimbolo(((NodoDeclaracionVector)raiz).getName(),-1);
+			}
+
 	    /* Hago el recorrido recursivo */
 	    if (raiz instanceof  NodoIf){
 	    	cargarTabla(((NodoIf)raiz).getPrueba());
@@ -38,12 +46,18 @@ public class TablaSimbolos {
 	    }
 	    else if (raiz instanceof  NodoAsignacion)
 	    	cargarTabla(((NodoAsignacion)raiz).getExpresion());
-	    else if (raiz instanceof  NodoEscribir)
+	    else if (raiz instanceof  NodoAsignacionVector)
+			cargarTabla(((NodoAsignacionVector)raiz).getExpresion());
+		else if (raiz instanceof  NodoEscribir)
 	    	cargarTabla(((NodoEscribir)raiz).getExpresion());
 	    else if (raiz instanceof NodoOperacion){
 	    	cargarTabla(((NodoOperacion)raiz).getOpIzquierdo());
 	    	cargarTabla(((NodoOperacion)raiz).getOpDerecho());
-	    }
+	    }else if (raiz instanceof NodoFor) {
+			cargarTabla(((NodoFor)raiz).getInit());
+			cargarTabla(((NodoFor)raiz).getEnd());
+			cargarTabla(((NodoFor)raiz).getSent());
+		}
 	    raiz = raiz.getHermanoDerecha();
 	  }
 	}

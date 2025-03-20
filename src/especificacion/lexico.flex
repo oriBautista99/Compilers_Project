@@ -41,7 +41,7 @@ numero		= {digito}+
 letra			= [a-zA-Z]
 identificador	= {letra} ({letra} | {digito})*
 nuevalinea		= \n | \n\r | \r\n
-espacio		= [ \t]+
+espacio		= [ \t\r\n]+
 %%
 
 /* Palabras Claves */
@@ -68,17 +68,31 @@ espacio		= [ \t]+
             return sf.newSymbol("FOR",sym.FOR);
             }
 "boolean"           {  if(debug) System.out.println("token BOOLEAN");
-            return sf.newSymbol("BOOLEAN",sym.FOR);
+            return sf.newSymbol("BOOLEAN",sym.BOOLEAN);
             }
+"int"           {  if(debug) System.out.println("token INT");
+                        return sf.newSymbol("INT",sym.INT);
+      }
 "vector"           {  if(debug) System.out.println("token VECTOR");
             return sf.newSymbol("VECTOR",sym.VECTOR);
             }
-
+"to"           {  if(debug) System.out.println("token TO");
+            return sf.newSymbol("TO",sym.TO);
+            }
+"do"           {  if(debug) System.out.println("token DO");
+            return sf.newSymbol("DO",sym.DO);
+            }
 /*  Lista de Operadores  */
 /* Asignacion */
 ":="            {	if(debug) System.out.println("token ASSIGN");
 			return sf.newSymbol("ASSIGN",sym.ASSIGN);
 			}
+"true"       {	if(debug) System.out.println("token TRUE");
+          return sf.newSymbol("TRUE",sym.TRUE);
+      }
+"false"      {	if(debug) System.out.println("token FALSE");
+          return sf.newSymbol("FALSE",sym.FALSE);
+      }
 /* Matematicos */
 "+"             {	if(debug) System.out.println("token PLUS");
 			return sf.newSymbol("PLUS",sym.PLUS);
@@ -115,13 +129,13 @@ espacio		= [ \t]+
             return sf.newSymbol("NE", sym.NE);
             }
 /* Logicos */
-"AND"             { if(debug) System.out.println("token AND");
+"and"             { if(debug) System.out.println("token AND");
             return sf.newSymbol("AND", sym.AND);
             }
-"OR"             { if(debug) System.out.println("token OR");
+"or"             { if(debug) System.out.println("token OR");
             return sf.newSymbol("OR", sym.OR);
             }
-"NOT"             { if(debug) System.out.println("token NOT");
+"not"             { if(debug) System.out.println("token NOT");
             return sf.newSymbol("NOT", sym.NOT);
             }
 /* Vector */
