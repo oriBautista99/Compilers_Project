@@ -5,35 +5,6 @@ import ve.edu.unet.nodosAST.*;
 import java.io.InputStreamReader;
 
 
-parser code {:
-
-/***********
-SymbolFactory es una nueva caracteristica que ha sido añadida a las version 11a de cup, la cual facilita la implementacion de clases Symbol personalizadas
-, esto debido a que dicha clase no provee mucha información de contexto que podria ser util para el analisis semantico o ayudar en la construccion del AST
-Mas informacion en: http//4thmouse.com/index.php/2007/02/15/using-custom-symbols-in-cup/
-***********/
-	public static void main(String args[]) throws Exception {
-		SymbolFactory sf = new DefaultSymbolFactory();
-		parser parser_obj;
-		if (args.length==0) 
-			parser_obj=new parser(new Lexico(new InputStreamReader(System.in),sf),sf);
-		else
-			parser_obj=new parser(new Lexico(new InputStreamReader(new java.io.FileInputStream(args[0])),sf),sf);
-
-		parser_obj.parse();
-		NodoBase root=parser_obj.action_obj.getASTroot();
-		System.out.println();
-		System.out.println("IMPRESION DEL AST GENERADO");
-		System.out.println();
-        Util.imprimirAST(root);
-		TablaSimbolos ts = new TablaSimbolos();
-		ts.cargarTabla(root);
-		ts.ImprimirClaves();
-		Generador.setTablaSimbolos(ts);
-		Generador.generarCodigoObjeto(root);
-	}
-
-:}
 
 action code {:
 	private boolean debug=true;
@@ -57,6 +28,7 @@ terminal REPEAT;
 terminal UNTIL;
 terminal FOR;
 terminal BOOLEAN;
+terminal INT;
 terminal VECTOR;
 terminal READ;
 terminal WRITE;
@@ -103,6 +75,7 @@ terminal SEMI;
 non terminal program;
 non terminal NodoBase stmt_seq;
 non terminal NodoBase stmt;
+non terminal NodoBase declaration;
 non terminal NodoBase if_stmt;
 non terminal NodoBase for_stmt;
 non terminal NodoBase repeat_stmt;
@@ -110,6 +83,7 @@ non terminal NodoBase assign_stmt;
 non terminal NodoBase read_stmt;
 non terminal NodoBase write_stmt;
 non terminal NodoBase exp;
+non terminal String type;
 non terminal NodoBase simple_exp;
 non terminal NodoBase term;
 non terminal NodoBase factor;
@@ -130,48 +104,71 @@ program     ::= stmt_seq:s	{:
 		;
 
 /* Un programa tiene una o más sentencias (stmt) separadas por SEMI (;).*/
-stmt_seq    ::= stmt_seq:ini SEMI stmt:sent	{:
-        if(debug) System.out.println("\t regla 2a");
-        NodoBase hijoActual = ini;
-		if(hijoActual !=null){
-			while(hijoActual.TieneHermano()){
-				hijoActual = hijoActual.getHermanoDerecha();
-			}
-			hijoActual.setHermanoDerecha(sent);
-			RESULT=ini;
-		}else{
-			RESULT=sent;
-		}
-		:}
-        | stmt:sent	{: if(debug) System.out.println("\t regla 2b");
-		    RESULT=sent;
-		:}
-		;
+stmt_seq ::= stmt:sent SEMI stmt_seq:rest {:
+                 if (debug) System.out.println("\t regla 2a");
+                 NodoBase hijoActual = sent;
+                 if (rest != null) {
+                     hijoActual.setHermanoDerecha(rest);
+                     RESULT = sent;
+                 } else {
+                     RESULT = sent;
+                 }
+             :} | stmt:sent {:
+    if (debug) System.out.println("\t regla 2c");
+    RESULT = sent;
+:};
 
 /* Tipos de sentencias que existen */
-stmt        ::= if_stmt:sif	{: if(debug) System.out.println("\t regla 3a"); 
+stmt  ::=
+            declaration:decla {:
+                    if(debug) System.out.println("\t Regla 3g Declaracion");
+                    RESULT=decla;
+                    :}
+            | assign_stmt:sasi	{:
+                        if(debug) System.out.println("\t regla 3c Asignacion");
+						RESULT=sasi;
+					:}
+            |if_stmt:sif	{:
+                    if(debug) System.out.println("\t regla 3a");
 					RESULT=sif;
 					:}
-            | repeat_stmt:srep	{: if(debug) System.out.println("\t regla 3b"); 
+            | repeat_stmt:srep	{:
+                        if(debug) System.out.println("\t regla 3b");
 						RESULT=srep;
-						:}
-            | assign_stmt:sasi	{: if(debug) System.out.println("\t regla 3c"); 
-						RESULT=sasi;
-						:}
-            | read_stmt:slec	{: if(debug) System.out.println("\t regla 3d"); 
+					:}
+            | read_stmt:slec	{:
+                    if(debug) System.out.println("\t regla 3d");
 					RESULT=slec;
 					:}
-            | write_stmt:sesc	{: if(debug) System.out.println("\t regla 3e"); 
+            | write_stmt:sesc	{:
+                    if(debug) System.out.println("\t regla 3e");
 					RESULT=sesc;
 					:}
-			| for_stmt:sfor	{: if(debug) System.out.println("\t regla 3f");
+			| for_stmt:sfor	{:
+                    if(debug) System.out.println("\t regla 3f");
                     RESULT=sfor;
             		:}
-            | error	{: if(debug) System.out.println("\t regla 3g");
+            | error	{:
+                if(debug) System.out.println("\t regla 3h");
 				System.out.println("Ocurrio error en cup # 0004");
 				RESULT=null;
 				:}
             ;
+
+/* Declaraciones */
+declaration ::= type:typ ID:var SEMI{:
+        if (debug) System.out.println("Regla 4 - Declaracion variable simple");
+        RESULT = new NodoDeclaracion((String)typ,var.toString(),0);
+    :};
+
+/* Tipos */
+type ::= INT {:
+        RESULT = "int";
+     :}
+     | BOOLEAN {:
+        RESULT = "boolean";
+     :}
+     ;
 
 /* Condicional if-else */
 if_stmt     ::= IF exp:ex THEN stmt_seq:pthen END	{:
@@ -192,7 +189,7 @@ repeat_stmt ::= REPEAT stmt_seq:cuerpo UNTIL exp:prueba	{:
 		;
 
 /* Ciclo for */
-for_stmt ::= FOR ID:var ASSIGN exp:ini TO exp:end DO stmt_seq:sent END {:
+for_stmt ::= FOR ID:var ASSIGN exp:ini TO exp:end DO stmt_seq:sent END SEMI{:
             if(debug) System.out.println("\t regla 6");
             RESULT = new NodoFor(var,ini,end,sent);
         :}
@@ -204,7 +201,7 @@ assign_stmt ::= ID:variable 	{:
     /*lineanum=1000; //Pasar/Obtener la linea correcta por el Simbolo
 	String nombre = variable.getName();*/
 	:}
-	ASSIGN exp:ex	{:
+	ASSIGN exp:ex {:
 	    if(debug) System.out.println("\t regla 7 parte final");
         if(variable!=null)
             RESULT = new NodoAsignacion(variable.toString(),ex);
@@ -212,7 +209,7 @@ assign_stmt ::= ID:variable 	{:
             RESULT = null;
             System.out.println("Ocurrio error en cup # 0001");
         }
-	:}
+	:} SEMI
 	| ID:variable LBRACKET exp:index RBRACKET ASSIGN exp:val {:
 	    if(debug) System.out.println("\t regla 7 vector");
 	    if(variable != null)
@@ -220,8 +217,7 @@ assign_stmt ::= ID:variable 	{:
         else {
             System.out.println("Error en cup # 0002 - Asignacion Vectorial");
         }
-	:}
-	;
+	:} SEMI;
 
 /* Lectura */
 read_stmt   ::= READ ID:variable	{:
@@ -240,8 +236,7 @@ read_stmt   ::= READ ID:variable	{:
 write_stmt  ::= WRITE exp:ex	{:
     if(debug) System.out.println("\t regla 9");
 	RESULT= new NodoEscribir(ex);
-	:}
-	;
+:};
 
 /* Expresiones */
 exp         ::= simple_exp:exI LT simple_exp:exD	{:
@@ -281,7 +276,8 @@ exp         ::= simple_exp:exI LT simple_exp:exD	{:
             if(debug) System.out.println("\t regla 10i");
             RESULT = new NodoOperacion(exD,tipoOp.not);
         :}
-		| simple_exp:ex	{: if(debug) System.out.println("\t regla 10c");
+		| simple_exp:ex	{:
+		    if(debug) System.out.println("\t regla 10c");
             RESULT = ex;
         :}
 		;
@@ -323,7 +319,7 @@ term        ::= term:exI TIMES factor:exD	{:
 factor      ::= LPAREN exp:ex RPAREN	{: if(debug) System.out.println("\t regla 12a"); 
 							RESULT = ex;
 							:}
-		| NUM:valor	{: if(debug) System.out.println("\t regla 12b"); 
+		| NUM:valor	{: if(debug) System.out.println("\t regla 12b");
 					System.out.println("Devolvi nodo numero entero");
 					if(valor!=null){
 						RESULT= new NodoValor(Integer.parseInt(valor));

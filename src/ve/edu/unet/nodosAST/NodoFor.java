@@ -5,14 +5,14 @@ public class NodoFor extends NodoBase {
     private String variable;
     private NodoBase init;
     private NodoBase end;
-    private NodoBase sent;
+    private NodoBase body;
 
     public NodoFor(String variable, NodoBase init, NodoBase end, NodoBase sent) {
         super();
         this.variable = variable;
         this.init = init;
         this.end = end;
-        this.sent = sent;
+        this.body = sent;
     }
 
     public NodoFor(){
@@ -20,7 +20,7 @@ public class NodoFor extends NodoBase {
         this.variable = null;
         this.init = null;
         this.end = null;
-        this.sent = null;
+        this.body = null;
     }
 
     public String getVariable() {
@@ -42,9 +42,9 @@ public class NodoFor extends NodoBase {
         this.end = end;
     }
     public NodoBase getSent() {
-        return sent;
+        return body;
     }
     public void setSent(NodoBase sent) {
-        this.sent = sent;
+        this.body = sent;
     }
 }

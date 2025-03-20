@@ -22,9 +22,11 @@ public class Util {
 
 		    else if (raiz instanceof  NodoEscribir)
 		    	System.out.println("Escribir");
-		    
+			else if (raiz instanceof  NodoFor)
+				System.out.println("For");
 		    else if (raiz instanceof NodoOperacion
 		    		|| raiz instanceof NodoValor
+					|| raiz instanceof NodoBool
 		    		|| raiz instanceof NodoIdentificador )
 		    	imprimirNodo(raiz);
 		    else System.out.println("Tipo de nodo desconocido");;
@@ -101,6 +103,20 @@ static void imprimirNodo( NodoBase raiz )
 			System.out.println("*");
 		if(sel==tipoOp.entre)
 			System.out.println("/");
+		if(sel==tipoOp.menorIgual)
+			System.out.println("<=");
+		if(sel==tipoOp.mayorIgual)
+			System.out.println(">=");
+		if(sel==tipoOp.diferente)
+			System.out.println("<>");
+		if(sel==tipoOp.mod)
+			System.out.println("mod");
+		if(sel==tipoOp.or)
+			System.out.println("OR");
+		if(sel==tipoOp.and)
+			System.out.println("AND");
+		if(sel==tipoOp.not)
+			System.out.println("NOT");
 	}
 
 	if(	raiz instanceof NodoValor ){
@@ -109,6 +125,10 @@ static void imprimirNodo( NodoBase raiz )
 
 	if(	raiz instanceof NodoIdentificador ){
 		System.out.println("ID, nombre= "+ ((NodoIdentificador)raiz).getNombre());
+	}
+
+	if(	raiz instanceof NodoBool ){
+		System.out.println("BOOLEAN, val= "+ ((NodoBool)raiz).getValor());
 	}
 
 }
