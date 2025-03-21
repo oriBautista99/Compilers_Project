@@ -1,6 +1,6 @@
 int x;
-x := 100;
-if x > 20 then
+x := 20;
+if x >= 20 then
     x := x - 5;
     write x;
 else

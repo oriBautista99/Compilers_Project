@@ -1,9 +1,14 @@
 int x;
 int i;
-x := 2;
+boolean op;
+x := 1;
 for i := 1 to 5 do
     x := x * 2;
     write x;
     i := i+1;
     write i;
+    if i <= 3 then
+        op := false;
+        write op;
+    end;
 end;
